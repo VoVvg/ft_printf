@@ -6,7 +6,7 @@
 /*   By: sroland <sroland@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/23 19:30:28 by bstacksp          #+#    #+#             */
-/*   Updated: 2020/01/18 17:28:28 by sroland          ###   ########.fr       */
+/*   Updated: 2020/01/18 18:22:55 by sroland          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,30 +63,28 @@ static int	parce_flags(t_format *print, int i, const char *format)
 	return (i);
 }
 
-t_format	parce(const char *format, int i)
+int		parce(const char *format, t_format *print, int i)
 {
-	t_format print;
-
-	init_print(&print);
+	init_print(print);
 	while (charcheck(format[i]))
 	{
 		if (format[i] == '.')
-			print.dot = 'A';
+			print->dot = 'A';
 		if (!format[i])
 		{
-			print.error = 'A';
-			return (print);
+			print->error = 'A';
+			return (-1);
 		}
 		i++;
 	}
-	i = parce_convs(&print, i, format);
-	i = parce_flags(&print, i, format);
-	if (print.dot)
+	i = parce_convs(print, i, format);
+	i = parce_flags(print, i, format);
+	if (print->dot)
 	{
 		while (format[i] != '.')
 			i++;
-		print.precision = (ft_atoi(&format[i + 1]) == 0&& print.type == 'f'
+		print->precision = (ft_atoi(&format[i + 1]) == 0&& print->type == 'f'
 		? -1 : ft_atoi(&format[i + 1]));
 	}
-	return (print);
+	return (1);
 }
